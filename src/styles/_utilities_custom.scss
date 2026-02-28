@@ -1,0 +1,287 @@
+$utilities: () !default;
+
+$utilities: map-merge(
+    $utilities,
+    (
+        "background-gradient": (
+            property: background,
+            class: bg-gradient,
+            values: (
+                primary: linear-gradient(to top left, #A5D7A7, $primary),
+                secondary: linear-gradient(to top left, #FFD89F, $secondary),
+                tertiary: linear-gradient(to top left, #D9D8B0, $tertiary),
+                primarylight: linear-gradient(to top left, $primary, #A5D7A7),
+                mix: linear-gradient(to top left, $secondary, $primary),
+                darkmix: linear-gradient(to top left, #D9D8B0, $customDark),
+            )
+        ),
+
+        "background": (
+            property: background,
+            class: bg,
+            values: (
+                none: none,
+            )
+        ),
+
+        "color": (
+            property: color,
+            class: text,
+            local-vars: (
+                "text-opacity": 1
+            ),
+            values: (
+                primary: $primary,
+                secondary: $secondary,
+                tertiary: $tertiary,
+                customDark: $customDark,
+                customLight: $customLight,
+            )
+
+        ),
+
+        "box-shadow": (
+            property: box-shadow,
+            class: bs,
+            values: (
+                primary: 3px 3px 8px $primary,
+                secondary: 3px 3px 8px $secondary,
+                tertiary: 3px 3px 8px $tertiary,
+                darkShadow: 3px 3px 8px $customDark,
+                primaryLight: 3px 3px 8px $primary-light,
+                primaryDark: 3px 3px 8px $primary-dark,
+                secondaryLight: 3px 3px 8px $secondary-light,
+                secondaryDark: 3px 3px 8px $secondary-dark,
+            )
+        ),
+        "font-size": (
+            responsive: true,
+            property: font-size,
+            class: fs,
+            values: $font-sizes
+        ),
+        // Padding utilities
+        "padding": (
+            responsive: true,
+            property: padding,
+            class: p,
+            values: $spacers
+        ),
+        "padding-x": (
+            responsive: true,
+            property: padding-right padding-left,
+            class: px,
+            values: $spacers
+        ),
+        "padding-y": (
+            responsive: true,
+            property: padding-top padding-bottom,
+            class: py,
+            values: $spacers
+        ),
+        "padding-top": (
+            responsive: true,
+            property: padding-top,
+            class: pt,
+            values: $spacers
+        ),
+        "padding-end": (
+            responsive: true,
+            property: padding-right,
+            class: pe,
+            values: $spacers
+        ),
+        "padding-bottom": (
+            responsive: true,
+            property: padding-bottom,
+            class: pb,
+            values: $spacers
+        ),
+        "padding-start": (
+            responsive: true,
+            property: padding-left,
+            class: ps,
+            values: $spacers
+        ),
+        // Margin utilities
+        "margin": (
+            responsive: true,
+            property: margin,
+            class: m,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-x": (
+            responsive: true,
+            property: margin-right margin-left,
+            class: mx,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-y": (
+            responsive: true,
+            property: margin-top margin-bottom,
+            class: my,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-top": (
+            responsive: true,
+            property: margin-top,
+            class: mt,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-end": (
+            responsive: true,
+            property: margin-right,
+            class: me,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-bottom": (
+            responsive: true,
+            property: margin-bottom,
+            class: mb,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        "margin-start": (
+            responsive: true,
+            property: margin-left,
+            class: ms,
+            values: map-merge($spacers, (auto: auto))
+        ),
+        // Sizing utilities
+        // scss-docs-start utils-sizing
+        "width": (
+            responsive: true,
+            property: width,
+            class: w,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                45: 45%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto,
+                content: fit-content,)
+            )
+        ),
+        "max-width": (
+            property: max-width,
+            class: mw,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto)
+            )
+        ),
+        "viewport-width": (
+            property: width,
+            class: vw,
+            values: (100: 100vw)
+        ),
+        "min-viewport-width": (
+            property: min-width,
+            class: min-vw,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto,
+                inherit: inherit,
+                content: fit-content,)
+            )
+        ),
+        "height": (
+            responsive: true,
+            property: height,
+            class: h,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto,
+                inherit: inherit,
+                content: fit-content,)
+            )
+        ),
+        "max-height": (
+            property: max-height,
+            class: mh,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto)
+            )
+        ),
+        "viewport-height": (
+            property: height,
+            class: vh,
+            values: (100: 100vh)
+        ),
+        "min-viewport-height": (
+            property: min-height,
+            class: min-vh,
+            values: map-merge($spacers, (
+                25: 25%,
+                30: 30%,
+                40: 40%,
+                50: 50%,
+                60: 60%,
+                75: 75%,
+                80: 80%,
+                90: 90%,
+                100: 100%,
+                auto: auto,
+                inherit: inherit,
+                content: fit-content,)
+            )
+        ),
+
+        "border-color": (
+            property: border-color,
+            class: border,
+            local-vars: (
+                "border-opacity": 1
+            ),
+            values: (
+                primary: $primary,
+                secondary: $secondary,
+                tertiary: $tertiary,
+                primaryDark: $primary-dark,
+                secondaryDark : $secondary-dark,
+                tertiaryDark: $tertiary-dark,
+                customDark: $customDark,
+            )
+        ),
+
+        
+    )
+)

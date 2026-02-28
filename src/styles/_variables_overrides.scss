@@ -1,0 +1,93 @@
+/*Colors*/
+$primary: #2C5AA0;
+$primary-light: #6b8fce;
+$primary-dark: #1C3C6E;
+
+$secondary: #3FA26A;
+$secondary-light: #7CC79A;
+$secondary-dark: #287047;
+
+$tertiary: #F2B705;
+$tertiary-light: #FFD24A;
+$tertiary-dark: #C89200;
+
+$dark : #2B2B2B ;
+$light : #F8F9FB;
+
+$customDark: #2B2B2B;
+$customLight: #F8F9FB;
+$customRed: #E04F5F;
+$blue:    #000 !default;
+$indigo:  #6610f2 !default;
+$purple:  #6f42c1 !default;
+$pink:    #d63384 !default;
+$red:     #dc3545 !default;
+$orange:  #fd7e14 !default;
+$yellow:  #fad669 !default;
+$green:   #31b97a !default;
+$teal:    #20c997 !default;
+$cyan:    #0dcaf0 !default;
+$success:       $green !default;
+$info:          $cyan !default;
+$warning:       $yellow !default;
+$danger:        $customRed !default;
+
+/*Font sizes*/
+$font-sizes: (
+    0: 1rem * 3,
+    1: 1rem * 2.5,
+    2: 1rem * 2,
+    3: 1rem * 1.75,
+    4: 1rem * 1.5,
+    5: 1rem * 1.25,
+    6: 1rem,
+    7: 1rem * 0.75,
+    8: 1rem * 0.5,
+    "l": 3.5rem,
+    "xl": 4rem,
+    "xxl": 4.5rem
+) !default;
+
+/*Theme-colors*/
+$theme-colors: (
+  "primary":      $primary,
+  "secondary":    $secondary,
+  "tertiary":     $tertiary,
+  "secondary-light": $secondary-light,
+  "primary-dark":  $primary-dark,
+  "primary-light": $primary-light,
+  "customDark":  $customDark,
+  "customLight": $customLight,
+  "customRed":   $customRed,
+  "success":      $success,
+  "info":         $info,
+  "warning":      $warning,
+  "danger":       $danger,
+) !default;
+
+/*Spacers*/
+$spacer: 1rem !default;
+$spacers: (
+    0: 0,
+    1: $spacer * .25,
+    2: $spacer * .5,
+    3: $spacer,
+    4: $spacer * 1.5,
+    5: $spacer * 2,
+    6: $spacer * 2.5,
+    7: $spacer * 3,
+    8: 50px,
+    9: 75px,
+    10: 100px,
+    11: 125px,
+    12: 150px,
+    13: 175px,
+    14: 200px,
+    15: 250px,
+    16: 300px,
+    17: 350px,
+    18: 400px,
+    19: 450px,
+    20: 500px,
+    
+) !default;

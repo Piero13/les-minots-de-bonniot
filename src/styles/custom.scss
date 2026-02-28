@@ -1,0 +1,106 @@
+// 1️⃣ Personnalisation des variables Bootstrap
+@import "./variables_overrides";
+@import "./utilities_custom";
+@import "./mixins";
+
+
+// 2️⃣ Import Bootstrap
+@import "bootstrap/scss/bootstrap";
+
+// General styles
+body {
+  min-height: 100svh;
+  background-color: $customLight;
+}
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: $customDark;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  min-height: 100svh;
+}
+
+* {
+  font-size: 14px;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  color: $dark;
+
+  &.active {
+    font-weight: bold !important;
+  }
+}
+
+.publicLayout {
+  min-height: 100svh;
+}
+
+a {
+  font-weight: 500;
+  color: $dark !important;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #535bf2;
+}
+
+.nav-link {
+    @include customLink;
+}
+
+h2 {
+    text-decoration: underline $dark;
+    color: $customDark;
+}
+
+.card {
+    &-title, &-subtitle, &-text {
+        color: $dark;
+    }
+}
+
+.gallery-btn {
+  width: 35px;
+  height: 50px;
+  border-radius: 10px;
+  border: none;
+  background: $customLight;
+  opacity: 0.5;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+
+/* Hover */
+.gallery-btn:hover {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+/* Active */
+.gallery-btn:active {
+  transform: scale(0.95);
+}
+
+/* Focus clavier (accessibilité) */
+.gallery-btn:focus-visible {
+  outline: 3px solid #0d6efd;
+  outline-offset: 3px;
+}
