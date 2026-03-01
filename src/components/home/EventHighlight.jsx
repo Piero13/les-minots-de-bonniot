@@ -75,17 +75,26 @@ const EventHighlight = () => {
                         : event.description}
                     </Card.Text>
 
-                    {event.link && (
+                    <Card.Footer className="d-flex flex-column flex-lg-row w-100 p-0 pt-3">
                       <Button
-                        variant="tertiary"
-                        href={event.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="border border-primaryDark bs-darkShadow"
+                        variant="primary"
+                        className="border border-primaryDark bs-darkShadow w-45 mx-auto"
+                        onClick={() => handleShow(event)}
                       >
-                        S'inscrire
+                        En savoir plus
                       </Button>
-                    )}
+                      {event.link && (
+                        <Button
+                          variant="tertiary"
+                          href={event.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="border border-primaryDark bs-darkShadow w-45 mx-auto"
+                        >
+                          S'inscrire
+                        </Button>
+                      )}
+                    </Card.Footer>
                   </Card.Body>
                 </Card>
               </Col>
