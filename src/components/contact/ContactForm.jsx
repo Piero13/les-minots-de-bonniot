@@ -21,6 +21,8 @@ const ContactForm = () => {
       content: form.content.value,
     };
 
+    console.log(data);
+
     try {
       await addMessage(data); // Enregistre juste dans la base
       setSuccess("Message envoyé avec succès !");
