@@ -1,26 +1,46 @@
 import { supabase } from "./supabaseClient";
 
-// Récupère le contenu de la section "about"
 export const getAboutContent = async () => {
   const { data, error } = await supabase
     .from("home_content")
-    .select("about_title, about_text, about_image_url")
+    .select("*")   // IMPORTANT
     .limit(1)
-    .single();
-
-  if (error && error.code !== "PGRST116") throw error;
-  return data;
-};
-
-// Met à jour le contenu de la section "about"
-export const updateAboutContent = async (payload) => {
-  // payload = { about_title, about_text, about_image_url }
-  const { data, error } = await supabase
-    .from("home_content")
-    .upsert({ id: payload.id || undefined, ...payload, created_at: new Date() })
-    .select()
-    .single();
+    .maybeSingle();
 
   if (error) throw error;
   return data;
+};
+
+export const updateAboutContent = async (payload) => {
+  if (payload.id) {
+    // UPDATE
+    const { data, error } = await supabase
+      .from("home_content")
+      .update({
+        about_title: payload.about_title,
+        about_text: payload.about_text,
+        about_image_url: payload.about_image_url,
+      })
+      .eq("id", payload.id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+
+  } else {
+    // INSERT (première fois seulement)
+    const { data, error } = await supabase
+      .from("home_content")
+      .insert({
+        about_title: payload.about_title,
+        about_text: payload.about_text,
+        about_image_url: payload.about_image_url,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
 };
