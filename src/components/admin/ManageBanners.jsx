@@ -5,7 +5,7 @@ import { supabase } from "../../services/supabaseClient";
 import {
   getHomeBanners,
   addHomeBanner,
-
+  activateBanner,
   deleteHomeBanner,
 } from "../../services/homeBannerService";
 import ImageCropModal from "./ImageCropModal";
@@ -92,8 +92,7 @@ const ManageBanners = () => {
       setActivatingId(id);
 
       // Appel RPC Supabase
-      const { error } = await supabase.rpc("set_active_banner", { banner_id: id });
-      if (error) throw error;
+      await activateBanner(id)
 
       await loadBanners();
     } catch (err) {
