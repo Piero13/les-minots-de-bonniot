@@ -35,7 +35,12 @@ const ManageLegalDocs = () => {
     if (!file) return;
 
     try {
-      const fileName = `${Date.now()}_${file.name}`;
+      const cleanFileName = file.name
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // supprime accents
+        .replace(/\s+/g, "-")            // espaces -> tirets
+        .replace(/[^a-zA-Z0-9.-]/g, ""); // caractères spéciaux
+      const fileName = `legal/${Date.now()}_${cleanFileName}`;
       const filePath = `legal/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
