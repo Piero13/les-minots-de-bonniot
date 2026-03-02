@@ -7,7 +7,7 @@ export const addMessage = async (data) => {
     .insert([data])
     .select()
     .single();
-
+  console.log(supabase);
   if (error) throw error;
   return result;
 };
