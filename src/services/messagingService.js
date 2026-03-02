@@ -3,7 +3,7 @@ import { supabase } from "./supabaseClient";
 // Ajouter un message depuis le formulaire
 export const addMessage = async (data) => {
   const { data: result, error } = await supabase
-    .from("messages")
+    .from("contact_messages")
     .insert([data])
     .select()
     .single();
@@ -11,10 +11,10 @@ export const addMessage = async (data) => {
   return result;
 };
 
-// Récupérer tous les messages (admin)
+// Récupérer tous les contact_messages (admin)
 export const getMessages = async () => {
   const { data, error } = await supabase
-    .from("messages")
+    .from("contact_messages")
     .select("*")
     .order("created_at", { ascending: false });
 
@@ -25,7 +25,7 @@ export const getMessages = async () => {
 // Marquer message comme lu/non-lu
 export const markAsRead = async (id, is_read) => {
   const { data, error } = await supabase
-    .from("messages")
+    .from("contact_messages")
     .update({ is_read })
     .eq("id", id)
     .select()
@@ -38,7 +38,7 @@ export const markAsRead = async (id, is_read) => {
 // Supprimer un message
 export const deleteMessage = async (id) => {
   const { error } = await supabase
-    .from("messages")
+    .from("contact_messages")
     .delete()
     .eq("id", id);
 
@@ -46,10 +46,10 @@ export const deleteMessage = async (id) => {
   return true;
 };
 
-// Compter les messages non lus
+// Compter les contact_messages non lus
 export const getUnreadMessagesCount = async () => {
   const { count, error } = await supabase
-    .from("messages")
+    .from("contact_messages")
     .select("*", { count: "exact", head: true })
     .eq("is_read", false);
 
