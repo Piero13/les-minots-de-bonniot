@@ -2,12 +2,11 @@ import { supabase } from "./supabaseClient";
 
 // Ajouter un message depuis le formulaire
 export const addMessage = async (data) => {
-  const { error, data: result } = await supabase
+  const { data: result, error } = await supabase
     .from("messages")
     .insert([data])
     .select()
     .single();
-  console.log(supabase);
   if (error) throw error;
   return result;
 };
