@@ -78,7 +78,7 @@ const EventHighlight = () => {
                     <Card.Footer className="d-flex flex-column flex-lg-row w-100 p-0 pt-3">
                       <Button
                         variant="primary"
-                        className="border border-primaryDark bs-darkShadow w-45 mx-auto"
+                        className="border border-primaryDark bs-darkShadow w-45 mx-auto mb-3 mb-lg-0"
                         onClick={() => handleShow(event)}
                       >
                         En savoir plus
