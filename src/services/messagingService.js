@@ -38,10 +38,10 @@ export const getMessages = async () => {
 /**
  * Marquer un message comme lu (admin)
  */
-export const markAsRead = async (id) => {
+export const markAsRead = async (id, is_read) => {
   const { data, error } = await supabase
     .from("contact_messages")
-    .update({ is_read: true })
+    .update({ is_read })
     .eq("id", id)
     .select()
     .single();
