@@ -113,14 +113,14 @@ const AdminMessaging = () => {
                 <td className="fs-7 fs-md-6">{msg.subject || "—"}</td>
                 <td className="fs-7 fs-md-6">{new Date(msg.created_at).toLocaleString()}</td>
                 <td className="fs-7 fs-md-6 text-center">{msg.is_read ? "✅" : "❌"}</td>
-                <td className="d-flex flex-column flex-md-row align-items-center">
+                <td>
                   <Button
                     variant="tertiary"
                     onClick={(e) => {
                       e.stopPropagation(); // éviter d’ouvrir le modal
                       handleToggleRead(msg);
                     }}
-                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 mb-md-0 me-0 me-md-2 border border-customDark"
+                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 border border-customDark"
                   >
                     {msg.is_read ? "Marquer non-lu" : "Marquer lu"}
                   </Button>
