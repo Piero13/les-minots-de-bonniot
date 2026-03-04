@@ -70,3 +70,20 @@ export const deleteMessage = async (id) => {
 
   return true;
 };
+
+/**
+ * Compter les messages non lus (admin)
+ */
+export const getUnreadMessagesCount = async () => {
+  const { count, error } = await supabase
+    .from("contact_messages")
+    .select("*", { count: "exact", head: true })
+    .eq("is_read", false);
+
+  if (error) {
+    console.error("Erreur comptage messages non lus:", error);
+    throw error;
+  }
+
+  return count;
+};
