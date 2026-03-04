@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
-import { addMessage } from "../../services/messagingService";
+import { sendContactMessage } from "../services/messagingService";
 
 const ContactForm = () => {
   const [loading, setLoading] = useState(false);
@@ -13,23 +13,22 @@ const ContactForm = () => {
     setError("");
     setSuccess("");
 
-    const form = e.target;
-    const data = {
-      full_name: form.full_name.value,
-      email: form.email.value,
-      subject: form.subject.value,
-      content: form.content.value,
+    const formData = new FormData(e.target);
+
+    const message = {
+      full_name: formData.get("full_name"),
+      email: formData.get("email"),
+      subject: formData.get("subject"),
+      content: formData.get("content"),
     };
 
-    console.log(data);
-
     try {
-      await addMessage(data); // Enregistre juste dans la base
-      setSuccess("Message envoyé avec succès !");
-      form.reset();
+      await sendContactMessage(message);
+      setSuccess("Votre message a bien été envoyé.");
+      e.target.reset();
     } catch (err) {
-      console.error(err);
-      setError("Impossible d'envoyer le message.");
+      setError("Une erreur est survenue. Veuillez réessayer.");
+      console.log("erreur envoi message : ", err );
     } finally {
       setLoading(false);
     }
@@ -60,7 +59,12 @@ const ContactForm = () => {
         <Form.Control as="textarea" name="content" rows={10} required />
       </Form.Group>
 
-      <Button variant="tertiary" className="w-auto mx-auto border border-primaryDark text-customDark" type="submit" disabled={loading}>
+      <Button
+        variant="tertiary"
+        className="w-auto mx-auto border border-primaryDark text-customDark"
+        type="submit"
+        disabled={loading}
+      >
         {loading ? <Spinner animation="border" size="sm" /> : "Envoyer"}
       </Button>
     </Form>
@@ -68,4 +72,3 @@ const ContactForm = () => {
 };
 
 export default ContactForm;
-
