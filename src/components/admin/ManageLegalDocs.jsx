@@ -119,8 +119,7 @@ const ManageLegalDocs = () => {
             <tr>
               <th className="fs-7 fs-md-6">Titre</th>
               <th className="fs-7 fs-md-6">Date</th>
-              <th className="fs-7 fs-md-6">Télécharger</th>
-              <th className="fs-7 fs-md-6">Supprimer</th>
+              <th className="fs-7 fs-md-6 w-10">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -129,7 +128,7 @@ const ManageLegalDocs = () => {
                 <td>{doc.title}</td>
                 <td>{new Date(doc.created_at).toLocaleDateString()}</td>
                 <td>
-                  <a
+                  <Button
                     href={
                       supabase.storage
                         .from("legal-docs-bucket")
@@ -137,15 +136,16 @@ const ManageLegalDocs = () => {
                     }
                     target="_blank"
                     rel="noopener noreferrer"
+                    variant="primary"
+                    className="border border-customDark text-customLight w-100 mb-2 "
+                    
                   >
                     Télécharger
-                  </a>
-                </td>
-                <td>
+                  </Button>
                   <Button
                     variant="danger"
-                    size="sm"
                     onClick={() => handleDelete(doc)}
+                    className="border border-customDark text-customLight w-100"
                   >
                     Supprimer
                   </Button>
