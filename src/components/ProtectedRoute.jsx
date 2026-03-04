@@ -6,10 +6,13 @@ const ProtectedRoute = ({ children, requireSuperAdmin = false }) => {
   const { user, loading, profile, isAdmin, isSuperAdmin } = useContext(AuthContext);
 
   // ⚠️ attendre que le profil soit chargé
-  if (loading || !profile) return null;
+  if (loading) return null;
 
   // 1️⃣ pas connecté → login
   if (!user) return <Navigate to="/login" replace />;
+
+  // profil inexistant
+  if(!profile) return null;
 
   // 2️⃣ route super_admin → rediriger si pas super_admin
   if (requireSuperAdmin && !isSuperAdmin) {
