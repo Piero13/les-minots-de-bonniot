@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container, ListGroup, Spinner } from "react-bootstrap";
+import { Button, Container, ListGroup, Spinner } from "react-bootstrap";
 import { supabase } from "../services/supabaseClient";
 
 const LegalDocuments = () => {
@@ -23,12 +23,14 @@ const LegalDocuments = () => {
   if (loading) return <Spinner animation="border" />;
 
   return (
-    <Container className="mt-4">
+    <Container className="pt-4">
       <h2 className="fs-4 fs-lg-3 text-center text-md-start">Documents légaux</h2>
       <ListGroup className="mt-3">
         {docs.map((doc) => (
-          <ListGroup.Item key={doc.id}>
-            <a
+          <ListGroup.Item key={doc.id} className="border border-primary mb-4 d-flex align-items-center py-3 px-5">
+            <p className="m-0">{doc.title}</p>
+            <Button
+              variant="primary"
               href={
                 supabase.storage
                   .from("legal-docs-bucket")
@@ -36,9 +38,10 @@ const LegalDocuments = () => {
               }
               target="_blank"
               rel="noopener noreferrer"
+              className="ms-5 border border-customDark bs-darkShadow text-customLight"
             >
-              {doc.title}
-            </a>
+              Télécharger
+            </Button>
           </ListGroup.Item>
         ))}
       </ListGroup>

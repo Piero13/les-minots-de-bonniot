@@ -41,27 +41,27 @@ const ContactForm = () => {
 
       <Form.Group className="mb-3">
         <Form.Label>Nom complet</Form.Label>
-        <Form.Control name="full_name" required />
+        <Form.Control className="border border-primary" name="full_name" required />
       </Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Label>Email</Form.Label>
-        <Form.Control type="email" name="email" required />
+        <Form.Control className="border border-primary" type="email" name="email" required />
       </Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Label>Objet</Form.Label>
-        <Form.Control name="subject" />
+        <Form.Control className="border border-primary" name="subject" />
       </Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Label>Message</Form.Label>
-        <Form.Control as="textarea" name="content" rows={10} required />
+        <Form.Control className="border border-primary" as="textarea" name="content" rows={10} required />
       </Form.Group>
 
       <Button
-        variant="tertiary"
-        className="w-auto mx-auto border border-primaryDark text-customDark"
+        variant="primary"
+        className="w-10 mx-auto border border-primaryDark text-customLight bs-darkShadow"
         type="submit"
         disabled={loading}
       >

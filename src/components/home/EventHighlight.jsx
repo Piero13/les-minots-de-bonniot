@@ -62,7 +62,7 @@ const EventHighlight = () => {
                     />
                   )}
 
-                  <Card.Body className="d-flex flex-column">
+                  <Card.Body className="d-flex flex-column bg-customLight">
                     <Card.Title>{event.title}</Card.Title>
 
                     <Card.Subtitle className="mb-2 text-muted">
@@ -75,7 +75,7 @@ const EventHighlight = () => {
                         : event.description}
                     </Card.Text>
 
-                    <Card.Footer className="d-flex flex-column flex-lg-row w-100 p-0 pt-3">
+                    <Card.Footer className="d-flex flex-column flex-lg-row w-100 p-0 pt-3 bg-customLight">
                       <Button
                         variant="primary"
                         className="border border-primaryDark bs-darkShadow w-45 mx-auto mb-3 mb-lg-0"

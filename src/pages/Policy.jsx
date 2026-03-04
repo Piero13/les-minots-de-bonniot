@@ -6,7 +6,7 @@ const Policy = () => {
         <Container className="my-5">
             <Row className="justify-content-center">
                 <Col xs={12} md={10} lg={8}>
-                    <Card className="shadow-sm">
+                    <Card className="bs-primaryDark border border-primary">
                         <Card.Body>
                             <h2 className="mb-4 text-center fs-4 fs-md-3">
                                 Politique de Confidentialité
