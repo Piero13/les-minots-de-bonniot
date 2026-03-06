@@ -499,7 +499,7 @@ const ManageTeam = () => {
           else setPictureFile(cropped);
           setShowCrop(false);
         }}
-        aspect={4 / 3}
+        aspect={showMemberModal ? 1 : 4 / 3}
       />
     </div>
   );
