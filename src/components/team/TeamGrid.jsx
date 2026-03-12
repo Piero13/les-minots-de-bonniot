@@ -31,7 +31,7 @@ const TeamGrid = () => {
         <Row className="g-4">
           {team.map((member) => (
             <Col xs={6} md={4} lg={3} key={member.id}>
-              <Card className="h-100 text-center border border-2 border-secondary bs-darkShadow">
+              <Card className="min-vh-11 text-center border border-2 border-secondary bs-darkShadow">
                 {member.photo_path && (
                   <Card.Img
                     variant="top"

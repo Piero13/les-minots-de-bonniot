@@ -91,11 +91,11 @@ const TeamSlider = () => {
     <section className="pb-4">
       <div className="container">
         <h2 className="text-center mb-4 fs-4 fs-lg-3">
-          Galerie photo de l'équipe
+          Galerie photo
         </h2>
 
         <Carousel
-          className="border border-2 border-secondary bs-darkShadow rounded overflow-hidden w-md-50 w-lg-50 mx-auto"
+          className="border bg-secondary border-2 border-secondary bs-darkShadow rounded overflow-hidden w-md-50 w-lg-50 mx-auto"
           variant="light"
           interval={null}
         >

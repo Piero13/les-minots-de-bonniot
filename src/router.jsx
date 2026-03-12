@@ -8,6 +8,7 @@ import AdminLayout from "./components/layout/AdminLayout";
 // Client pages
 import Home from "./pages/Home";
 import Team from "./pages/Team";
+import Gallery from "./pages/Gallery"
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
@@ -37,6 +38,7 @@ export const router = createBrowserRouter([
       { path: "/documents", element: <LegalDocuments /> },
       { path: "/policy", element: <Policy /> },
       { path: "/legal-notices", element: <LegalNotices /> },
+      { path: "gallery", element: <Gallery /> }
     ],
   },
 

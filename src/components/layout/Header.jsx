@@ -40,13 +40,9 @@ const Header = () => {
 
   return (
     <header
-      className="py-5 h-14 h-sm-16 h-md-18 h-lg-20"
-      style={{
-        backgroundImage: `url(${bannerUrl || defaultBanner})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-      }}
+      className="h-14 h-sm-16 h-md-18 h-lg-22 overflow-hidden d-flex justtify-content-center align-items-center"
     >
+      <img src={ bannerUrl || defaultBanner } alt="bannire du site de l'APE Saint Julien 1" className="w-100" />
     </header>
   );
 };

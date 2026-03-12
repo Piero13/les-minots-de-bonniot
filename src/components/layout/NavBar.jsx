@@ -41,6 +41,12 @@ const NavBar = () => {
               </Nav.Link>
             </LinkContainer>
 
+            <LinkContainer to="/gallery" onClick={handleClose}>
+              <Nav.Link className="mb-3 mb-lg-0 mx-auto mx-lg-2">
+                Photos
+              </Nav.Link>
+            </LinkContainer>
+
             <LinkContainer to="/contact" onClick={handleClose}>
               <Nav.Link className="mb-3 mb-lg-0 mx-auto mx-lg-2">
                 Contact
