@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from "react";
-import { Carousel, Spinner, Modal } from "react-bootstrap";
+import { Carousel, Spinner, Modal, CarouselCaption } from "react-bootstrap";
 import { getTeamPictures } from "../../services/teamPicturesService";
 import { supabase } from "../../services/supabaseClient";
 
@@ -109,6 +109,9 @@ const TeamSlider = () => {
                   style={{ cursor: "pointer" }}
                   onClick={() => openModal(index)}
                 />
+                <Carousel.Caption>
+                  <h3>{pic.title}</h3>
+                </Carousel.Caption>
               </div>
             </Carousel.Item>
           ))}
