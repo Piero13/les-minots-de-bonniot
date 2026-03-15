@@ -35,7 +35,7 @@ const AboutSection = () => {
   if (!content) return null;
 
   return (
-    <section className="py-4 px-3 bg-customLight">
+    <section className="pt-4 pb-6 px-3 bg-customLight">
       <Container>
         <Row className="align-items-center justify-content-center">
           {content.about_image_url && (

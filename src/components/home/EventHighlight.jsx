@@ -35,7 +35,7 @@ const EventHighlight = () => {
   }, []);
 
   return (
-    <section className="pt-4 pb-6 px-3 bg-light bg-primary-light">
+    <section className="pt-4 pb-6 px-3 bg-primary-light">
       <Container>
         <h2 className="text-center mb-4 fs-4 fs-lg-3">Prochains événements</h2>
 
@@ -48,7 +48,7 @@ const EventHighlight = () => {
         ) : (
           <Row className="g-4">
             {events.map((event) => (
-              <Col key={event.id} xs={12} md={4}>
+              <Col key={event.id} xs={12} md={4} >
                 <Card className="h-100 border-primaryDark border-2 bs-primaryDark" onClick={() => handleShow(event)}>
                   {event.image_path && (
                     <Card.Img
