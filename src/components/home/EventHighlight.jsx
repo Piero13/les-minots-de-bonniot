@@ -70,15 +70,15 @@ const EventHighlight = () => {
                     </Card.Subtitle>
 
                     <Card.Text className="flex-grow-1">
-                      {event.description.length > 120
-                        ? event.description.substring(0, 120) + "..."
+                      {event.description.length > 100
+                        ? event.description.substring(0, 100) + "..."
                         : event.description}
                     </Card.Text>
 
                     <Card.Footer className="d-flex flex-column flex-lg-row w-100 p-0 pt-3 bg-customLight">
                       <Button
                         variant="primary"
-                        className="border border-primaryDark bs-darkShadow w-45 mx-auto mb-3 mb-lg-0"
+                        className="border border-primaryDark bs-darkShadow w-50 w-md-100 w-lg-45 mx-auto mb-3 mb-lg-0"
                         onClick={() => handleShow(event)}
                       >
                         En savoir plus
@@ -89,7 +89,7 @@ const EventHighlight = () => {
                           href={event.link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="border border-primaryDark bs-darkShadow w-45 mx-auto"
+                          className="border border-primaryDark bs-darkShadow w-50 w-md-100 w-lg-45 mx-auto"
                         >
                           S'inscrire
                         </Button>

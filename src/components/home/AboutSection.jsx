@@ -39,9 +39,9 @@ const AboutSection = () => {
       <Container>
         <Row className="align-items-center justify-content-center">
           {content.about_image_url && (
-            <Col xs={12} md={6} lg={5} className="mb-4 mb-md-0 w-auto mx-auto mx-md-0 mx-lg-7">
+            <Col xs={12} md={6} lg={5} className="mb-4 mb-md-0 w-auto mx-auto mx-lg-7">
               <Image
-                className="w-10 w-md-12 w-lg-15 border border-primaryDark bs-primaryDark"
+                className="w-14 w-md-15 w-lg-15 border border-primaryDark bs-primaryDark"
                 src={supabase.storage.from("home-bucket").getPublicUrl(content.about_image_url).data.publicUrl}
                 fluid
                 rounded
