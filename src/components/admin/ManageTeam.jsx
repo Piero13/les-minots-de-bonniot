@@ -17,28 +17,24 @@ import imageCompression from "browser-image-compression";
 import ImageCropModal from "./ImageCropModal";
 
 const ManageTeam = () => {
-  // STATES
+
   const [team, setTeam] = useState([]);
   const [pictures, setPictures] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // MEMBER MODAL
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [currentMember, setCurrentMember] = useState(null);
   const [memberImageFile, setMemberImageFile] = useState(null);
   const [memberTempImage, setMemberTempImage] = useState(null);
 
-  // PICTURE MODAL
   const [showPictureModal, setShowPictureModal] = useState(false);
   const [currentPicture, setCurrentPicture] = useState(null);
   const [pictureFile, setPictureFile] = useState(null);
   const [pictureTempFile, setPictureTempFile] = useState(null);
 
-  // IMAGE CROP
   const [showCrop, setShowCrop] = useState(false);
 
-  // LOAD DATA
   const loadTeam = async () => {
     setLoading(true);
     try {
@@ -58,7 +54,6 @@ const ManageTeam = () => {
     loadTeam();
   }, []);
 
-  // HELPER
   const getCurrentImageUrl = (file, currentPath, bucket) => {
     if (file) return URL.createObjectURL(file);
     if (currentPath) {
@@ -67,7 +62,6 @@ const ManageTeam = () => {
     return null;
   };
 
-  // HANDLERS MEMBERS
   const handleAddOrEditMember = async (e) => {
     e.preventDefault();
     setError(null);
@@ -75,28 +69,35 @@ const ManageTeam = () => {
     const form = e.target;
 
     try {
-      let member;
       const payload = {
         first_name: form.first_name.value,
         last_name: form.last_name.value,
         role: form.role.value,
       };
 
-      if (!currentMember) member = await addTeamMember(payload);
-      else member = await updateTeamMember(currentMember.id, payload);
+      let member;
 
-      // IMAGE
+      if (!currentMember) {
+        member = await addTeamMember(payload);
+      } else {
+        member = await updateTeamMember(currentMember.id, payload);
+      }
+
       if (memberImageFile && member.id) {
+
         const compressedFile = await imageCompression(memberImageFile, {
           maxSizeMB: 0.5,
           maxWidthOrHeight: 800,
           useWebWorker: true,
         });
+
         const fileName = `${member.id}-${Date.now()}.jpg`;
-        const { error: uploadError } = await supabase.storage
+
+        const { error } = await supabase.storage
           .from("team-bucket")
           .upload(fileName, compressedFile, { contentType: "image/jpeg" });
-        if (uploadError) throw uploadError;
+
+        if (error) throw error;
 
         if (currentMember?.photo_path) {
           await supabase.storage.from("team-bucket").remove([currentMember.photo_path]);
@@ -109,7 +110,9 @@ const ManageTeam = () => {
       setCurrentMember(null);
       setMemberImageFile(null);
       setMemberTempImage(null);
+
       await loadTeam();
+
     } catch (err) {
       console.error(err);
       setError("Erreur sauvegarde membre.");
@@ -118,72 +121,80 @@ const ManageTeam = () => {
 
   const handleDeleteMember = async (id) => {
     if (!window.confirm("Supprimer ce membre ?")) return;
+
     try {
-      const memberToDelete = team.find((m) => m.id === id);
-      if (memberToDelete?.photo_path) {
-        await supabase.storage.from("team-bucket").remove([memberToDelete.photo_path]);
+
+      const member = team.find((m) => m.id === id);
+
+      if (member?.photo_path) {
+        await supabase.storage.from("team-bucket").remove([member.photo_path]);
       }
+
       await deleteTeamMember(id);
       await loadTeam();
+
     } catch (err) {
       console.error(err);
       setError("Erreur suppression membre.");
     }
   };
 
-  // HANDLERS PICTURES
   const handleAddOrEditPicture = async (e) => {
     e.preventDefault();
     setError(null);
 
     const form = e.target;
+    const title = form.title.value;
 
     try {
-      if (!pictureFile) {
-        setError("Veuillez sélectionner une image.");
-        return;
-      }
 
-      // 🔹 Compression de l'image
-      const compressedFile = await imageCompression(pictureFile, {
-        maxSizeMB: 0.5,
-        maxWidthOrHeight: 1200,
-        useWebWorker: true,
-      });
+      let imagePath = currentPicture?.image_path || null;
 
-      // 🔹 Nom du fichier avec timestamp
-      const fileName = `${Date.now()}-${compressedFile.name}`;
+      if (pictureFile) {
 
-      // 🔹 Upload dans le bucket
-      const { error: uploadError } = await supabase.storage
-        .from("team-pictures-bucket")
-        .upload(fileName, compressedFile, { contentType: "image/jpeg" });
+        const compressedFile = await imageCompression(pictureFile, {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1200,
+          useWebWorker: true,
+        });
 
-      if (uploadError) throw uploadError;
+        const fileName = `${Date.now()}-${compressedFile.name}`;
 
-      // 🔹 Préparer le payload pour Supabase avec title + image_path
-      const payload = {
-        title: form.title.value,
-        image_path: fileName,
-      };
+        const { error } = await supabase.storage
+          .from("team-pictures-bucket")
+          .upload(fileName, compressedFile, { contentType: "image/jpeg" });
 
-      if (!currentPicture) {
-        // CREATE
-        await addTeamPicture(payload);
-      } else {
-        // UPDATE
-        // Supprimer l'ancienne image si elle existe
-        if (currentPicture.image_path) {
+        if (error) throw error;
+
+        if (currentPicture?.image_path) {
           await supabase.storage.from("team-pictures-bucket").remove([currentPicture.image_path]);
         }
-        await updateTeamPicture(currentPicture.id, payload);
+
+        imagePath = fileName;
       }
 
-      // 🔹 Reset state et reload
+      const payload = { title, image_path: imagePath };
+
+      if (!currentPicture) {
+
+        if (!pictureFile) {
+          setError("Veuillez sélectionner une image.");
+          return;
+        }
+
+        await addTeamPicture(payload);
+
+      } else {
+
+        await updateTeamPicture(currentPicture.id, payload);
+
+      }
+
       setShowPictureModal(false);
       setCurrentPicture(null);
       setPictureFile(null);
       setPictureTempFile(null);
+
       await loadTeam();
 
     } catch (err) {
@@ -193,14 +204,20 @@ const ManageTeam = () => {
   };
 
   const handleDeletePicture = async (id) => {
+
     if (!window.confirm("Supprimer cette image ?")) return;
+
     try {
-      const picToDelete = pictures.find((p) => p.id === id);
-      if (picToDelete?.image_path) {
-        await supabase.storage.from("team-pictures-bucket").remove([picToDelete.image_path]);
+
+      const pic = pictures.find((p) => p.id === id);
+
+      if (pic?.image_path) {
+        await supabase.storage.from("team-pictures-bucket").remove([pic.image_path]);
       }
+
       await deleteTeamPicture(id);
       await loadTeam();
+
     } catch (err) {
       console.error(err);
       setError("Erreur suppression image.");
@@ -209,9 +226,12 @@ const ManageTeam = () => {
 
   return (
     <div className="pb-5 px-4">
-      <h2 className="fs-4 fs-md-3 mb-3 text-center text-lg-start">Gérer les membres</h2>
 
-      {error && <Alert variant="danger">{error}</Alert>}
+      {/* Admin Members */}
+
+      <h2 className="fs-4 fs-md-3 mb-3 text-center text-lg-start">
+        Gérer les membres
+      </h2>
 
       <Button
         variant="primary"
@@ -226,10 +246,12 @@ const ManageTeam = () => {
         Ajouter un membre
       </Button>
 
+      {error && <Alert variant="danger">{error}</Alert>}
+
       {loading ? (
         <Spinner animation="border" />
       ) : (
-        <Table striped bordered hover className="w-100 w-lg-75 mx-auto mb-5 border-secondary bs-secondaryDark">
+        <Table striped bordered hover className="w-100 w-lg-75 mx-auto mb-5 border border-primary">
           <thead>
             <tr>
               <th className="w-8">Photo</th>
@@ -239,6 +261,7 @@ const ManageTeam = () => {
               <th className="w-9">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {team.length === 0 && (
               <tr>
@@ -260,21 +283,16 @@ const ManageTeam = () => {
                 <td>{m.first_name}</td>
                 <td>{m.role}</td>
                 <td>
-                  <Button
+                  <Button 
                     variant="tertiary"
-                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 text-customDark border border-customDark"
-                    onClick={() => {
-                      setCurrentMember(m);
-                      setMemberImageFile(null);
-                      setMemberTempImage(null);
-                      setShowMemberModal(true);
-                    }}
+                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 text-customDark border border-customDark" 
+                    onClick={() => { setCurrentMember(m); setShowMemberModal(true); }}
                   >
                     Modifier
                   </Button>{" "}
-                  <Button
+                  <Button 
                     variant="danger"
-                    className="w-9 w-md-10 fs-7 fs-md-6 text-customLight border border-customDark"
+                    className="w-9 w-md-10 fs-7 fs-md-6 text-customLight border border-customDark" 
                     onClick={() => handleDeleteMember(m.id)}
                   >
                     Supprimer
@@ -286,8 +304,12 @@ const ManageTeam = () => {
         </Table>
       )}
 
-      {/* ------------------ GALLERY ------------------ */}
-      <h2 className="fs-4 fs-md-3 mb-3 text-center text-lg-start">Galerie photo de l'équipe</h2>
+      {/* Admin Gallery */}
+
+      <h2 className="fs-4 fs-md-3 mb-3 text-center text-lg-start">
+        Galerie photo de l'équipe
+      </h2>
+
       <Button
         variant="primary"
         className="mb-3 border border-customDark bs-darkShadow"
@@ -304,7 +326,7 @@ const ManageTeam = () => {
       {loading ? (
         <Spinner animation="border" />
       ) : (
-        <Table striped bordered hover className="w-100 w-lg-75 mx-auto border-secondary bs-secondaryDark">
+        <Table striped bordered hover className="w-100 w-lg-75 mx-auto  border border-primary">
           <thead>
             <tr>
               <th className="w-10">Image</th>
@@ -312,6 +334,7 @@ const ManageTeam = () => {
               <th className="w-9">Actions</th>
             </tr>
           </thead>
+
           <tbody>
             {pictures.length === 0 && (
               <tr>
@@ -322,29 +345,25 @@ const ManageTeam = () => {
               <tr key={p.id}>
                 <td>
                   {p.image_path && (
-                    <Image
-                      src={supabase.storage.from("team-pictures-bucket").getPublicUrl(p.image_path).data.publicUrl}
-                      rounded
-                      className="w-12 w-lg-14"
-                    />
+                  <Image
+                    src={supabase.storage.from("team-pictures-bucket").getPublicUrl(p.image_path).data.publicUrl}
+                    width={120}
+                    rounded
+                    className="w-11 w-md-12 w-lg-14"
+                  />
                   )}
                 </td>
                 <td>{p.title}</td>
                 <td>
-                  <Button
+                  <Button 
                     variant="tertiary"
-                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 text-customDark border border-customDark"
-                    onClick={() => {
-                      setCurrentPicture(p);
-                      setPictureFile(null);
-                      setPictureTempFile(null);
-                      setShowPictureModal(true);
-                    }}
+                    className="w-9 w-md-10 fs-7 fs-md-6 mb-2 text-customDark border border-customDark" 
+                    onClick={() => { setCurrentPicture(p); setShowPictureModal(true); }}
                   >
                     Modifier
                   </Button>{" "}
-                  <Button
-                    variant="danger"
+                  <Button 
+                    variant="danger" 
                     className="w-9 w-md-10 fs-7 fs-md-6 text-customLight border border-customDark"
                     onClick={() => handleDeletePicture(p.id)}
                   >
@@ -357,9 +376,8 @@ const ManageTeam = () => {
         </Table>
       )}
 
-      {/* ------------------ MODALS ------------------ */}
+      {/* Member Modal */}
 
-      {/* MEMBER MODAL */}
       <Modal show={showMemberModal} onHide={() => setShowMemberModal(false)}>
         <Form onSubmit={handleAddOrEditMember}>
           <Modal.Header closeButton>
@@ -367,34 +385,38 @@ const ManageTeam = () => {
           </Modal.Header>
 
           <Modal.Body>
+
             <Form.Group className="mb-3">
               <Form.Label className="mb-1">Prénom</Form.Label>
-              <Form.Control
-                name="first_name"
-                defaultValue={currentMember?.first_name || ""}
-                placeholder="Prénom"
+              <Form.Control 
+                name="first_name" 
+                defaultValue={currentMember?.first_name || ""} 
                 required
+                placeholder="Prénom"
               />
             </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label className="mb-1">Nom</Form.Label>
-              <Form.Control
+              <Form.Control 
                 name="last_name"
                 defaultValue={currentMember?.last_name || ""}
-                placeholder="Nom"
                 required
+                placeholder="Nom"
               />
             </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label className="mb-1">Rôle</Form.Label>
-              <Form.Control
-                name="role"
-                defaultValue={currentMember?.role || ""}
-                placeholder="Rôle"
+              <Form.Control 
+                name="role" 
+                defaultValue={currentMember?.role || ""} 
                 required
+                placeholder="Röle"
               />
             </Form.Group>
-            <Form.Group className="mb-3">
+
+            <Form.Group>
               <Form.Label className="mb-1">Image</Form.Label>
               <Form.Control
                 type="file"
@@ -404,36 +426,41 @@ const ManageTeam = () => {
                   setShowCrop(true);
                 }}
               />
-              {getCurrentImageUrl(memberTempImage, currentMember?.photo_path, "team-bucket") && (
-                <div className="mt-3 text-center">
-                  <small className="d-block mb-2">Prévisualisation :</small>
+
+              {getCurrentImageUrl(memberImageFile || memberTempImage, currentMember?.photo_path, "team-bucket") && (
+                <div className="text-center mt-3">
                   <Image
-                    src={getCurrentImageUrl(memberTempImage, currentMember?.photo_path, "team-bucket")}
+                    src={getCurrentImageUrl(memberImageFile || memberTempImage, currentMember?.photo_path, "team-bucket")}
                     roundedCircle
-                    className="w-50"
-                    style={{ objectFit: "cover" }}
+                    width={150}
                   />
                 </div>
               )}
             </Form.Group>
+
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
+            <Button 
               className="text-customLight border border-customDark"
-              variant="danger"
+              variant="danger" 
               onClick={() => setShowMemberModal(false)}
             >
               Annuler
             </Button>
-            <Button className="border border-customDark" type="submit">
+            <Button 
+              className="border border-customDark"
+              type="submit"
+            >
               {currentMember ? "Modifier" : "Ajouter"}
             </Button>
           </Modal.Footer>
+
         </Form>
       </Modal>
 
-      {/* PICTURE MODAL */}
+      {/* Picture Modal */}
+
       <Modal show={showPictureModal} onHide={() => setShowPictureModal(false)}>
         <Form onSubmit={handleAddOrEditPicture}>
           <Modal.Header closeButton>
@@ -441,15 +468,17 @@ const ManageTeam = () => {
           </Modal.Header>
 
           <Modal.Body>
+
             <Form.Group className="mb-3">
               <Form.Label className="mb-1">Titre</Form.Label>
-              <Form.Control
-                name="title"
-                defaultValue={currentPicture?.title || ""}
+              <Form.Control 
+                name="title" 
+                defaultValue={currentPicture?.title || ""} 
+                required 
                 placeholder="Titre"
-                required
               />
             </Form.Group>
+
             <Form.Group className="mb-3">
               <Form.Label className="mb-1">Image</Form.Label>
               <Form.Control
@@ -460,36 +489,42 @@ const ManageTeam = () => {
                   setShowCrop(true);
                 }}
               />
-              {getCurrentImageUrl(pictureTempFile, currentPicture?.image_path, "team-pictures-bucket") && (
-                <div className="mt-3 text-center">
-                  <small className="d-block mb-2">Prévisualisation :</small>
+
+              {getCurrentImageUrl(pictureFile || pictureTempFile, currentPicture?.image_path, "team-pictures-bucket") && (
+                <div className="text-center mt-3">
                   <Image
-                    src={getCurrentImageUrl(pictureTempFile, currentPicture?.image_path, "team-pictures-bucket")}
-                    rounded
+                    src={getCurrentImageUrl(pictureFile || pictureTempFile, currentPicture?.image_path, "team-pictures-bucket")}
                     className="w-80 w-md-50"
                     style={{ objectFit: "cover" }}
+                    rounded
                   />
                 </div>
               )}
             </Form.Group>
+
           </Modal.Body>
 
           <Modal.Footer>
-            <Button
+            <Button 
               className="text-customLight border border-customDark"
-              variant="danger"
+              variant="danger" 
               onClick={() => setShowPictureModal(false)}
             >
               Annuler
             </Button>
-            <Button className="border border-customDark" type="submit">
+            <Button 
+              className="border border-customDark"
+              type="submit"
+            >
               {currentPicture ? "Modifier" : "Ajouter"}
             </Button>
           </Modal.Footer>
+
         </Form>
       </Modal>
 
-      {/* IMAGE CROP */}
+      {/* Crop Modal */}
+
       <ImageCropModal
         show={showCrop}
         imageFile={memberTempImage || pictureTempFile}
