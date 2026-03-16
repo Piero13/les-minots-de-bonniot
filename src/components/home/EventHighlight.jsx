@@ -14,6 +14,7 @@ const EventHighlight = () => {
     setSelectedEvent(event);
     setShow(true);
   }
+  
   const handleClose = () => {
     setShow(false);
     setSelectedEvent(null);

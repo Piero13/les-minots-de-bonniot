@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from "react";
-import { Carousel, Spinner, Modal, CarouselCaption } from "react-bootstrap";
+import { Carousel, Spinner, Modal } from "react-bootstrap";
 import { getTeamPictures } from "../../services/teamPicturesService";
 import { supabase } from "../../services/supabaseClient";
 
-import { FiX, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 const TeamSlider = () => {
   const [pictures, setPictures] = useState([]);
@@ -11,8 +11,8 @@ const TeamSlider = () => {
 
   const [show, setShow] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const [zoom, setZoom] = useState(1);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
 
   const touchStartX = useRef(null);
 
@@ -31,40 +31,37 @@ const TeamSlider = () => {
     loadPictures();
   }, []);
 
+  const getImageUrl = (pic) =>
+    supabase.storage
+      .from("team-pictures-bucket")
+      .getPublicUrl(pic.image_path).data.publicUrl;
+
   const openModal = (index) => {
     setCurrentIndex(index);
-    setShow(true);
     setZoom(1);
-    setPosition({ x: 0, y: 0 });
+    setShow(true);
   };
 
   const closeModal = () => {
     setShow(false);
     setZoom(1);
-    setPosition({ x: 0, y: 0 });
   };
 
   const nextImage = () => {
     setCurrentIndex((prev) => (prev + 1) % pictures.length);
-    resetZoom();
   };
 
   const prevImage = () => {
     setCurrentIndex((prev) =>
       prev === 0 ? pictures.length - 1 : prev - 1
     );
-    resetZoom();
-  };
-
-  const resetZoom = () => {
-    setZoom(1);
-    setPosition({ x: 0, y: 0 });
   };
 
   const handleWheel = (e) => {
     e.preventDefault();
+
     setZoom((prev) => {
-      const newZoom = e.deltaY < 0 ? prev + 0.1 : prev - 0.1;
+      const newZoom = e.deltaY < 0 ? prev + 0.15 : prev - 0.15;
       return Math.min(Math.max(newZoom, 1), 3);
     });
   };
@@ -75,17 +72,33 @@ const TeamSlider = () => {
 
   const handleTouchEnd = (e) => {
     const diff = touchStartX.current - e.changedTouches[0].clientX;
+
     if (diff > 50) nextImage();
     if (diff < -50) prevImage();
   };
 
-  if (loading) return <Spinner animation="border" />;
-  if (pictures.length === 0) return null;
+  useEffect(() => {
+    setZoom(1);
+  }, [currentIndex]);
 
-  const getImageUrl = (pic) =>
-    supabase.storage
-      .from("team-pictures-bucket")
-      .getPublicUrl(pic.image_path).data.publicUrl;
+  // navigation clavier
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (!show) return;
+
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+      if (e.key === "Escape") closeModal();
+    };
+
+    window.addEventListener("keydown", handleKey);
+
+    return () => window.removeEventListener("keydown", handleKey);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [show]);
+
+  if (loading) return <Spinner animation="border" />;
+  if (!pictures.length) return null;
 
   return (
     <section className="pb-4">
@@ -109,68 +122,77 @@ const TeamSlider = () => {
                   style={{ cursor: "pointer" }}
                   onClick={() => openModal(index)}
                 />
-                <Carousel.Caption>
-                  <h3>{pic.title}</h3>
-                </Carousel.Caption>
               </div>
+              <Carousel.Caption>
+                <h3>{pic.title}</h3>
+              </Carousel.Caption>
             </Carousel.Item>
           ))}
         </Carousel>
       </div>
 
+      {/* LIGHTBOX */}
+
       <Modal
         show={show}
         onHide={closeModal}
-        fullscreen
         centered
-        contentClassName="bg-black"
+        size="lg"
       >
+        <Modal.Header closeButton className="border border-secondary bg-secondary-light">
+          <Modal.Title>
+            {pictures[currentIndex]?.title}
+          </Modal.Title>
+        </Modal.Header>
+
         <Modal.Body
-          className="d-flex justify-content-center align-items-center position-relative p-0"
+          className="border border-secondary d-flex flex-column align-items-center py-4"
           onWheel={handleWheel}
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
-          {/* Bouton fermer */}
-          <button
-            onClick={closeModal}
-            aria-label="Fermer la galerie"
-            className="gallery-btn position-absolute top-0 end-0 m-3"
-          >
-            <FiX size={26} />
-          </button>
+          <div className="position-relative w-100 d-flex justify-content-center">
 
-          {/* Bouton précédent */}
-          <button
-            onClick={prevImage}
-            aria-label="Image précédente"
-            className="gallery-btn position-absolute start-0 top-50 translate-middle-y ms-3"
-          >
-            <FiChevronLeft size={30} />
-          </button>
+            <button
+              onClick={prevImage}
+              className="gallery-btn position-absolute start-0 top-50 translate-middle-y"
+            >
+              <FiChevronLeft size={30} />
+            </button>
 
-          {/* Bouton suivant */}
-          <button
-            onClick={nextImage}
-            aria-label="Image suivante"
-            className="gallery-btn position-absolute end-0 top-50 translate-middle-y me-3"
-          >
-            <FiChevronRight size={30} />
-          </button>
+            <img
+              src={getImageUrl(pictures[currentIndex])}
+              alt={pictures[currentIndex]?.title}
+              draggable={false}
+              className="img-fluid rounded"
+              style={{
+                transform: `scale(${zoom})`,
+                transition: "transform 0.2s ease",
+                maxHeight: "70vh",
+                objectFit: "contain",
+                cursor: zoom > 1 ? "grab" : "default",
+              }}
+            />
 
-          <img
-            src={getImageUrl(pictures[currentIndex])}
-            alt="fullscreen"
-            draggable={false}
-            style={{
-              transform: `scale(${zoom}) translate(${position.x}px, ${position.y}px)`,
-              transition: "transform 0.2s ease",
-              maxHeight: "100vh",
-              maxWidth: "100%",
-              objectFit: "contain",
-              cursor: zoom > 1 ? "grab" : "default",
-            }}
-          />
+            <button
+              onClick={nextImage}
+              className="gallery-btn position-absolute end-0 top-50 translate-middle-y"
+            >
+              <FiChevronRight size={30} />
+            </button>
+
+          </div>
+
+          {/* titre de l'image */}
+          <h5 className="mt-3 text-center">
+            {pictures[currentIndex]?.title}
+          </h5>
+
+          {/* compteur */}
+          <p className="text-muted">
+            {currentIndex + 1} / {pictures.length}
+          </p>
+
         </Modal.Body>
       </Modal>
     </section>
