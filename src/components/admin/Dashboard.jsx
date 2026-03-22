@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, Row, Col, Badge } from "react-bootstrap";
+import { Card, Row, Col, Badge, Spinner } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { getUnreadMessagesCount } from "../../services/messagingService";
+import { getTodayVisits, getTotalVisits } from "../../services/analyticsService";
 import {
   BsCalendarEvent,
   BsPeople,
@@ -14,7 +15,10 @@ import {
 const Dashboard = () => {
   const navigate = useNavigate();
   const [unreadCount, setUnreadCount] = useState(0);
+  const [total, setTotal] = useState(null);
+  const [today, setToday] = useState(null);
 
+// Message count
   useEffect(() => {
     const loadUnreadCount = async () => {
       try {
@@ -28,6 +32,24 @@ const Dashboard = () => {
     loadUnreadCount();
   }, []);
 
+// Visits count
+  useEffect(() => {
+    const loadStats = async () => {
+      try {
+        const totalVisits = await getTotalVisits();
+        const todayVisits = await getTodayVisits();
+
+        setTotal(totalVisits);
+        setToday(todayVisits);
+      } catch (err) {
+        console.error("Erreur compteur visites : ", err)
+      }
+    };
+
+    loadStats();
+  }, []);
+
+// Cards datas
   const cards = [
     {
       title: "Home",
@@ -70,9 +92,9 @@ const Dashboard = () => {
 
   return (
     <>
-      <h2 className="fs-4 fs-md-3 text-center text-lg-start">Tableau de bord</h2>
+      <h2 className="fs-4 fs-md-3 text-center text-lg-start mb-4">Tableau de bord</h2>
 
-      <Row className="mt-4 g-4">
+      <Row className="mb-4 g-4">
         {cards.map((card, index) => (
           <Col md={4} key={index}>
             <Card
@@ -106,6 +128,20 @@ const Dashboard = () => {
           </Col>
         ))}
       </Row>
+
+      <h2 className="fs-4 fs-md-3 text-center text-lg-start mb-4">Visites du site</h2>
+      <div className="d-flex gap-4 flex-wrap mb-4">
+
+        <Card className="p-3 text-center border-1 border-primary w-13">
+          <h5>Aujourd'hui</h5>
+          <p className="m-0">{today}</p>
+        </Card>
+
+        <Card className="p-3 text-center border-1 border-primary w-13">
+          <h5>Total des visites</h5>
+          <p className="m-0">{total}</p>
+        </Card>
+      </div>
     </>
   );
 };
