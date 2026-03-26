@@ -11,6 +11,7 @@ import {
   BsEnvelope,
   BsCardImage 
 } from "react-icons/bs";
+import VisitsChart from "./VisitsChart";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -130,8 +131,8 @@ const Dashboard = () => {
       </Row>
 
       <h2 className="fs-4 fs-md-3 text-center text-lg-start mb-4">Visites du site</h2>
+      
       <div className="d-flex gap-4 flex-wrap mb-4">
-
         <Card className="p-3 text-center border-1 border-primary w-13">
           <h5>Aujourd'hui</h5>
           <p className="m-0">{today}</p>
@@ -141,6 +142,10 @@ const Dashboard = () => {
           <h5>Total des visites</h5>
           <p className="m-0">{total}</p>
         </Card>
+      </div>
+
+      <div className="mb-4">
+        <VisitsChart />
       </div>
     </>
   );

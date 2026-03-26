@@ -1,6 +1,14 @@
 import { supabase } from "./supabaseClient";
 
-// Total visites
+// 7 last days visits
+export const getVisitsLast7Days = async () => {
+    const { data, error } = await supabase.rpc("get_visits_last_7_days");
+
+    if (error) throw error;
+    return data;
+};
+
+// Total visits
 export const getTotalVisits = async () => {
   const { count, error } = await supabase
     .from("visits")
@@ -10,7 +18,7 @@ export const getTotalVisits = async () => {
   return count;
 };
 
-// Visites du jour
+// actual day visits
 export const getTodayVisits = async () => {
   const today = new Date().toISOString().split("T")[0];
 
