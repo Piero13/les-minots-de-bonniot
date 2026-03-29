@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Container, Row, Col, Image, Spinner, Button } from "react-bootstrap";
+import { FaInfoCircle, FaExclamationTriangle, FaExclamationCircle, FaRegHeart, FaRegComment } from "react-icons/fa";
 import { supabase } from "../../services/supabaseClient";
 import { getAboutContent } from "../../services/homeService";
 
@@ -21,6 +22,18 @@ const AboutSection = () => {
   useEffect(() => {
     loadContent();
   }, []);
+
+  const iconType = content?.about_icon;
+
+  const iconMap = {
+    information: <FaInfoCircle fill="#2C5AA0" className="fs-4"/>,
+    important: <FaExclamationCircle fill="#E04F5F" className="fs-4"/>,
+    danger: <FaExclamationTriangle fill="#E04F5F" className="fs-4"/>,
+    communication: <FaRegComment fill="#2C5AA0" className="fs-4"/>,
+    merci: <FaRegHeart fill="#E04F5F" className="fs-4"/>,
+  };
+
+  const icon = iconMap[iconType] || null;
 
   if (loading) {
     return (
@@ -62,7 +75,12 @@ const AboutSection = () => {
         </Row>
       </Container>
 
-      
+      {content.about_message && (
+          <div className="d-flex flex-column flex-md-row justify-content-center align-items-center align-items-md-start mx-auto mt-6 w-80 w-md-60 border border-primary rounded p-3 bs-primaryDark">
+            {icon && <span className="flex-shrink-0 mb-2 mb-md-0 me-0 me-md-2">{icon}</span>}
+            <p className="m-0 p-0">{ content.about_message }</p>
+          </div>
+      )}
     </section>
   );
 };

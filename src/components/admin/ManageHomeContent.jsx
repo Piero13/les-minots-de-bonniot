@@ -72,6 +72,8 @@ const ManageHomeContent = () => {
         about_title: e.target.title.value,
         about_text: e.target.text.value,
         about_image_url: imagePath,
+        about_message: e.target.message.value,
+        about_icon: e.target.icon.value,
       });
 
       setImageFile(null);
@@ -99,8 +101,25 @@ const ManageHomeContent = () => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label className="mb-1">Texte de description</Form.Label>
+          <Form.Label className="mb-1">Texte de présentation</Form.Label>
           <Form.Control as="textarea" name="text" rows={5} defaultValue={content?.about_text || ""} required />
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label className="mb-1">Type de message</Form.Label>
+          <Form.Select name="icon" defaultValue={content?.about_icon || ""}>
+            <option value="">🚫 Aucun</option>
+            <option value="information">ℹ️ Information</option>
+            <option value="important">❗ Important</option>
+            <option value="danger">⚠️ Danger</option>
+            <option value="communication">💬 Communication</option>
+            <option value="merci">❤️ Merci</option>
+          </Form.Select>
+        </Form.Group>
+
+        <Form.Group className="mb-3">
+          <Form.Label className="mb-1">Message d'accueil</Form.Label>
+          <Form.Control as="textarea" name="message" rows={5} defaultValue={content?.about_message || ""} />
         </Form.Group>
 
         <Form.Group className="mb-3">

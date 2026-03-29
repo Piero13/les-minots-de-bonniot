@@ -20,6 +20,8 @@ export const updateAboutContent = async (payload) => {
         about_title: payload.about_title,
         about_text: payload.about_text,
         about_image_url: payload.about_image_url,
+        about_message : payload.about_message,
+        about_icon: payload.about_icon,
       })
       .eq("id", payload.id)
       .select()
@@ -36,6 +38,8 @@ export const updateAboutContent = async (payload) => {
         about_title: payload.about_title,
         about_text: payload.about_text,
         about_image_url: payload.about_image_url,
+        about_message : payload.about_message,
+        about_icon: payload.about_icon,
       })
       .select()
       .single();
