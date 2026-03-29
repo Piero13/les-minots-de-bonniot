@@ -58,6 +58,7 @@ const AboutSection = () => {
                 src={supabase.storage.from("home-bucket").getPublicUrl(content.about_image_url).data.publicUrl}
                 fluid
                 rounded
+                alt="Image d'accueil de la section Qui sommes nous ?"
               />
             </Col>
           )}

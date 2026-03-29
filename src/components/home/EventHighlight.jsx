@@ -60,6 +60,7 @@ const EventHighlight = () => {
                           .getPublicUrl(event.image_path).data.publicUrl
                       }
                       style={{ height: "200px", objectFit: "cover" }}
+                      alt={`Image de l'évènement ${event.title}`}
                     />
                   )}
 
