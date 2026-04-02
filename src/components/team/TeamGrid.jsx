@@ -37,6 +37,7 @@ const TeamGrid = () => {
                     variant="top"
                     src={supabase.storage.from("team-bucket").getPublicUrl(member.photo_path).data.publicUrl}
                     style={{ height: "200px", objectFit: "cover" }}
+                    alt={`phot de ${member.first_name} ${member.last_name}, ${member.role} de l'association de parents d'élèves de l'école Saint Julien 1, Marseille 12`}
                   />
                 )}
                 <Card.Body>

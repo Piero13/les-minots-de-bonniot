@@ -118,9 +118,10 @@ const TeamSlider = () => {
                 <img
                   className="d-block h-100 w-auto"
                   src={getImageUrl(pic)}
-                  alt={pic.title}
+                  alt={`Photo de ${pic.title} à l'école Saint julien 1, Marseille 12`}
                   style={{ cursor: "pointer" }}
                   onClick={() => openModal(index)}
+                  loading="lazy"
                 />
               </div>
               <Carousel.Caption>
@@ -172,6 +173,7 @@ const TeamSlider = () => {
                 objectFit: "contain",
                 cursor: zoom > 1 ? "grab" : "default",
               }}
+              loading="lazy"
             />
 
             <button

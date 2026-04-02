@@ -60,7 +60,7 @@ const EventHighlight = () => {
                           .getPublicUrl(event.image_path).data.publicUrl
                       }
                       style={{ height: "200px", objectFit: "cover" }}
-                      alt={`Image de l'évènement ${event.title}`}
+                      alt={`Image de l'évènement ${event.title} à l'école Saint Julien 1, Marseille 12`}
                     />
                   )}
 
@@ -124,7 +124,7 @@ const EventHighlight = () => {
                       .from("events-bucket")
                       .getPublicUrl(selectedEvent.image_path).data.publicUrl
                   }
-                  alt={selectedEvent.title}
+                  alt={`Image de l'évènement ${selectedEvent.title} à l'école Saint Julien 1, Marseille 12`}
                   className="img-fluid mb-3 rounded"
                 />
               )}
