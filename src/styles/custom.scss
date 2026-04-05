@@ -104,3 +104,12 @@ h2 {
   outline: 3px solid #0d6efd;
   outline-offset: 3px;
 }
+
+.social-link {
+  transition: all 0.5s;
+  &:hover {
+    transform: scale(1.1);
+    filter: drop-shadow(3px 3px 0px $customDark);
+    fill: $primary;
+  }
+}

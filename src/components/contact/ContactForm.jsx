@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button, Alert, Spinner } from "react-bootstrap";
+import emailjs from "@emailjs/browser"
 import { sendContactMessage } from "../../services/messagingService";
 
 const ContactForm = () => {
@@ -15,6 +16,8 @@ const ContactForm = () => {
 
     const formData = new FormData(e.target);
 
+    if (formData.get("honeypot")) return;
+
     const message = {
       full_name: formData.get("full_name"),
       email: formData.get("email"),
@@ -23,12 +26,29 @@ const ContactForm = () => {
     };
 
     try {
+      // send message to supabase
       await sendContactMessage(message);
+
+      // send message to emailjs
+      emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          full_name: message.full_name,
+          email: message.email,
+          subject: message.subject,
+          content: message.content,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      ).catch(err => console.log("Error: ", err));
+
       setSuccess("Votre message a bien été envoyé.");
       e.target.reset();
+
     } catch (err) {
       setError("Une erreur est survenue. Veuillez réessayer.");
       console.log("erreur envoi message : ", err );
+
     } finally {
       setLoading(false);
     }
@@ -58,6 +78,8 @@ const ContactForm = () => {
         <Form.Label>Message</Form.Label>
         <Form.Control className="border border-primary" as="textarea" name="content" rows={10} required />
       </Form.Group>
+
+      <Form.Control type="text" name="honeypot" className="d-none"/>
 
       <Button
         variant="primary"

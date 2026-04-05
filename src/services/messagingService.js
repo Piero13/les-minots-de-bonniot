@@ -1,7 +1,7 @@
 import { supabase } from "./supabaseClient";
 
 /**
- * Envoyer un message (public)
+ * Post message (public)
  */
 export const sendContactMessage = async (message) => {
   const { data, error } = await supabase
@@ -19,7 +19,7 @@ export const sendContactMessage = async (message) => {
 };
 
 /**
- * Récupérer tous les messages (admin)
+ * Get all messages (admin)
  */
 export const getMessages = async () => {
   const { data, error } = await supabase
@@ -36,7 +36,7 @@ export const getMessages = async () => {
 };
 
 /**
- * Marquer un message comme lu (admin)
+ * Mark as unread (admin)
  */
 export const markAsRead = async (id, is_read) => {
   const { data, error } = await supabase
@@ -72,7 +72,7 @@ export const deleteMessage = async (id) => {
 };
 
 /**
- * Compter les messages non lus (admin)
+ * Count unread messages (admin)
  */
 export const getUnreadMessagesCount = async () => {
   const { count, error } = await supabase
